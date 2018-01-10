@@ -2,11 +2,8 @@ var trackerApp = angular.module('trackerApp', []);
 
 trackerApp.controller('mainController', ['$scope', '$http',
   function($scope, $http) {
-    $scope.greeting = "Hello Out There";
 
     //list of popular currencies
-    //all available currencies from api can be found:
-    //https://www.cryptonator.com/api/currencies
     $scope.cryptos = {
       BTC: 'Bitcoin',
       ETH: 'Ethereum',
@@ -18,12 +15,15 @@ trackerApp.controller('mainController', ['$scope', '$http',
       ZEC: 'Zcash'
     }
 
+    //symbols used in the drop down list
     $scope.currencySymbols = {
       'CAD': '$',
       'USD': '$',
       'GBP': '£'
     }
 
+    //initialize currency (set to USD as there is more data associated with it)
+    //and setup a watcher to update the market data on currency change
     $scope.selectedCurrency = 'USD';
     $scope.$watch('selectedCurrency', function(newValue, oldValue) {
       $scope.getMarketData();
@@ -31,25 +31,28 @@ trackerApp.controller('mainController', ['$scope', '$http',
 
     var getCrypto = function(crypto, currency) {
       return new Promise((resolve, reject) => {
+
         $http({
           method: 'GET',
-          url: `https://api.cryptonator.com/api/ticker/${crypto}-${currency}`
+          //url: `https://api.cryptonator.com/api/ticker/${crypto}-${currency}`
+          url: `https://min-api.cryptocompare.com/data/histoday?fsym=${crypto}&tsym=${currency}&limit=1`
         }).then(function(res) {
-          resolve(res.data.ticker);
+          resolve(res.data.Data[1]);
         }, function(err) {
           reject(err);
         });
       })
     }
 
+    // formats a number to a given precision
+    // returns two dashes if the number is blank
     $scope.formatNum = function(num, precision) {
       if (num == '')
         return '--';
       return parseFloat(num, 10).toFixed(precision);
     }
 
-    //Returns volume-weighted price, total trade volume,
-    //change in the last hour for a given crypto and base currency
+    //Returns open, close, high, low, volumes
     $scope.getMarketData = function() {
       let promises = [];
       Object.keys($scope.cryptos).map((symbol) => {
@@ -57,9 +60,16 @@ trackerApp.controller('mainController', ['$scope', '$http',
       });
       Promise.all(promises).then((values) => {
         $scope.$apply(function() {
+          //marketData order will be the same order of the cryptos list above
+          //which is needed for when they are iterated through on the DOM
           $scope.marketData = values;
         })
-      });
+      })
+    }
+
+    //Calculates change from open and close of marketData
+    $scope.getDailyChange = function(open, close) {
+      return $scope.formatNum(open - close, 2);
     }
 
     $scope.getMarketData();
@@ -74,6 +84,7 @@ trackerApp.directive('cryptoCard', function() {
       crypto: '=',
       marketData: '=',
       index: '=',
+      getDailyChange: "&",
       formatNum: "&",
       currencySymbol: '='
     }

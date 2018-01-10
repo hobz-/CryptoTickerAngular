@@ -3,16 +3,22 @@
   <h6 class="card-subtitle mb-2 text-muted">{{ marketData[index].base }}</h6>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
-      Price: {{ formatNum({num: marketData[index].price, precision: 2 }) | currency: currencySymbol }}
+      Open: {{ formatNum({num: marketData[index].open, precision: 2 }) | currency: currencySymbol }}
     </li>
     <li class="list-group-item">
-      Change (1hr):
-      <span ng-class="formatNum({num: marketData[index].change, precision: 2 }) < 0 ? 'text-danger' : 'text-success'">
-        {{ formatNum({num: marketData[index].change, precision: 2 }) | currency: currencySymbol }}
+      High: {{ formatNum({num: marketData[index].high, precision: 2 }) | currency: currencySymbol }}
+    </li>
+    <li class="list-group-item">
+      Low: {{ formatNum({num: marketData[index].low, precision: 2 }) | currency: currencySymbol }}
+    </li>
+    <li class="list-group-item">
+      Close: {{ formatNum({num: marketData[index].close, precision: 2 }) | currency: currencySymbol }}
+    </li>
+    <li class="list-group-item">
+      Change:
+      <span ng-class="getDailyChange({open: marketData[index].open, close: marketData[index].close }) < 0 ? 'text-danger' : 'text-success'">
+        {{ getDailyChange({open: marketData[index].open, close: marketData[index].close }) | currency: currencySymbol }}
       </span>
-    </li>
-    <li class="list-group-item">
-      Vol. (24hr): {{ formatNum({num: marketData[index].volume, precision: 0 }) | number: 0 }}
     </li>
   </ul>
 </div>
