@@ -78,7 +78,7 @@ trackerApp.controller('mainController', ['$scope', '$http',
 trackerApp.directive('cryptoCard', function() {
   return {
     restrict: 'EA',
-    templateUrl: './directives/cryptocard.html',
+    templateUrl: '/CryptoTickerAngular/directives/cryptocard.html',
     replace: true,
     scope: {
       crypto: '=',
