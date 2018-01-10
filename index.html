@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-us" ng-app="trackerApp">
+    <head>
+        <title>Crypto Tracker</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta charset="UTF-8">
+
+        <!-- load bootstrap and fontawesome via CDN -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+        integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous">
+        <link rel="stylesheet" href="app.css">
+
+        <!-- load angular via CDN -->
+        <script src="//code.angularjs.org/1.6.6/angular.min.js"></script>
+        <script src="//code.angularjs.org/1.6.6/angular-route.min.js"></script>
+        <script src="app.js"></script>
+        <base href="/">
+    </head>
+    <body>
+    <header>
+			<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">Crypto Ticker</a>
+				</div>
+
+				<ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+				</ul>
+			</div>
+			</nav>
+		</header>
+        <div class="container">
+          <div ng-controller="mainController">
+            <div class="form-group">
+              <label for="selectedCurrency">Currency: </label>
+              <select name="selectedCurrency" class="custom-select custom-select-lg mb-3" id="selectedCurrency" ng-model="selectedCurrency">
+                <option value="CAD">$CAD</option>
+                <option value="USD">$USD</option>
+                <option value="GBP">£GBP</option>
+              </select>
+            </div>
+            <div ng-if="marketData.length > 0">
+              <div class="row justify-content-sm-center justify-content-md-center">
+                <div class="card border-dark mb-3 col-md-3 offset-md-1 col-sm-5 offset-sm-1" ng-repeat="crypto in cryptos">
+                  <crypto-card
+                    market-data='marketData'
+                    crypto='crypto'
+                    index='$index'
+                    format-num="formatNum(num, precision)",
+                    currency-symbol="currencySymbols[selectedCurrency]"
+                  ></crypto-card>
+                </div>
+              </div>
+            </div>
+            <div ng-if="marketData === undefined">
+              <div>
+                Loading...
+              </div>
+            </div>
+          </div>
+	      </div>
+    </body>
+</html>

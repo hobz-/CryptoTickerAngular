@@ -1,0 +1,18 @@
+<div class="card-body">
+  <h4 class="card-title">{{ crypto }}</h4>
+  <h6 class="card-subtitle mb-2 text-muted">{{ marketData[index].base }}</h6>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      Price: {{ formatNum({num: marketData[index].price, precision: 2 }) | currency: currencySymbol }}
+    </li>
+    <li class="list-group-item">
+      Change (1hr):
+      <span ng-class="formatNum({num: marketData[index].change, precision: 2 }) < 0 ? 'text-danger' : 'text-success'">
+        {{ formatNum({num: marketData[index].change, precision: 2 }) | currency: currencySymbol }}
+      </span>
+    </li>
+    <li class="list-group-item">
+      Vol. (24hr): {{ formatNum({num: marketData[index].volume, precision: 0 }) | number: 0 }}
+    </li>
+  </ul>
+</div>
