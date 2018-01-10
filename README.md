@@ -2,8 +2,8 @@
 
 A cryptocurrency dashboard that tracks the most traded cryptocurrencies around the world (plus Doge).
 
-Created using AngularJS(1.6) and the [cryptonator](https://cryptonator.com) api.
+Created using AngularJS(1.6) and the [cryptocompare](https://cryptocompare.com) api.
 
-Displays current price for 3 currencies (CAD, USD and GBP), as well as 1 hour change, and 24 hour volumes.
+Displays previous day market data for western currencies (CAD, USD and GBP).
 
 Work in Progress.
