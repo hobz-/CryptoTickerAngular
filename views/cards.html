@@ -1,0 +1,27 @@
+<div class="form-group">
+  <label for="selectedCurrency">Currency: </label>
+  <select name="selectedCurrency" class="custom-select custom-select-lg mb-3" id="selectedCurrency" ng-model="selectedCurrency">
+    <option value="CAD">$CAD</option>
+    <option value="USD">$USD</option>
+    <option value="GBP">£GBP</option>
+  </select>
+</div>
+<div ng-if="marketData.length > 0">
+  <div class="row justify-content-sm-center justify-content-md-center">
+    <div class="card border-dark mb-3 col-md-3 offset-md-1 col-sm-5 offset-sm-1" ng-repeat="crypto in cryptos">
+      <crypto-card
+        market-data='marketData'
+        crypto='crypto'
+        index='$index'
+        get-daily-change="getDailyChange(open, close)"
+        format-num="formatNum(num, precision)",
+        currency-symbol="currencySymbols[selectedCurrency]"
+      ></crypto-card>
+    </div>
+  </div>
+</div>
+<div ng-if="marketData === undefined">
+  <div>
+    Loading...
+  </div>
+</div>

@@ -1,4 +1,46 @@
-.col-centered{
-  float: none;
-  margin: 0 auto;
+body {
+  font: 14px Helvetica Neue;
+  text-rendering: optimizeLegibility;
+  margin-top: 1em;
+  overflow-y: scroll;
+}
+.label {
+  font-size: .65em;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: .3em;
+}
+.error {
+  color: red;
+}
+
+path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+main {
+  padding-top: 50px;
+}
+
+.nav-link {
+  font-size: 24px;
 }
