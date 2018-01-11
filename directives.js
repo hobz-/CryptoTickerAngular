@@ -75,6 +75,26 @@ trackerApp.directive('lineCharts', function() {
              .style("stroke", color(id))
              .attr("d", priceline(cryptoData.prices));
 
+         svg.selectAll("dot")
+            .data(cryptoData.prices)
+              .enter().append("circle")
+            .attr("r", 5)
+            .attr("cx", function(d) { return x(d.time); })
+            .attr("cy", function(d) { return y(d.close); })
+            .on("mouseover", function(d) {
+              div.transition()
+                .duration(200)
+                .style("opacity", .9);
+              div.html(formatTime(d.time) + "<br/>" + d.close)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+              })
+            .on("mouseout", function(d) {
+              div.transition()
+                .duration(500)
+                .style("opacity", 0);
+              });
+
           svg.append("text")
              .attr("x", width/2)
              .attr("y", 0)
