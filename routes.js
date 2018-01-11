@@ -1,11 +1,11 @@
 trackerApp.config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
-      templateUrl: 'CryptoTickerAngular/views/cards.html',
+      templateUrl: '/CryptoTickerAngular/views/cards.html',
       controller: 'mainController'
     })
     .when('/charts', {
-      templateUrl: 'CryptoTickerAngular/views/charts.html',
+      templateUrl: '/CryptoTickerAngular/views/charts.html',
       controller: 'chartController'
     });
 
