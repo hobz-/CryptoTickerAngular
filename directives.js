@@ -17,8 +17,8 @@ trackerApp.directive('cryptoCard', function() {
 trackerApp.directive('lineCharts', function() {
   // set the dimensions and margins of the graph
   var margin = {top: 30, right:80, bottom: 70, left:50},
-      width = 400 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+      width = 300 - margin.left - margin.right,
+      height = 175 - margin.top - margin.bottom;
 
   // set the format for parsing the date / time
   var dateFormat = d3.timeFormat("%b %d %y");
