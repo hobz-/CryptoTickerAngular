@@ -45,6 +45,10 @@ trackerApp.directive('lineCharts', function() {
         }
 
         newVal.forEach((cryptoData, id) => {
+          let div = d3.select("body").append("div")
+                      .attr("class", "tooltip")
+                      .style("opacity", 0);
+
           let svg = d3.select(element[0])
                     .append("svg")
                       .attr("width", width + margin.left + margin.right)
@@ -78,7 +82,7 @@ trackerApp.directive('lineCharts', function() {
          svg.selectAll("dot")
             .data(cryptoData.prices)
               .enter().append("circle")
-            .attr("r", 5)
+            .attr("r", 0.5)
             .attr("cx", function(d) { return x(d.time); })
             .attr("cy", function(d) { return y(d.close); })
             .on("mouseover", function(d) {
