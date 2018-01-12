@@ -16,21 +16,18 @@ trackerApp.directive('cryptoCard', function() {
 
 trackerApp.directive('lineCharts', function() {
   // set the dimensions and margins of the graph
-  var margin = {top: 30, right:20, bottom: 70, left:50},
-      width = 350 - margin.left - margin.right,
+  var margin = {top: 30, right:80, bottom: 70, left:50},
+      width = 550 - margin.left - margin.right,
       height = 300 - margin.top - margin.bottom;
 
-  // set the ranges
-  var x = d3.scaleTime().range([0, width]);
-  var y = d3.scaleLinear().range([height, 0]);
+  // set the format for parsing the date / time
+  var dateFormat = d3.timeFormat("%b %d %y");
+  var bisectDate = d3.bisector(function(d) { return d.time; }).left
+  var formatValue = d3.format(",.2f");
+  var formatCurrency = function(d) { return "$" + formatValue(d); };
 
   //Initialise colors for the different plots
   var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-  // define the line creating function
-  var priceline = d3.line()
-      .x(function(d) { return x(d.time);  })
-      .y(function(d) { return y(d.close); })
 
   return {
     restrict: 'E',
@@ -39,7 +36,6 @@ trackerApp.directive('lineCharts', function() {
     },
     link: function (scope, element, attrs) {
       scope.$watch('data', function (newVal, oldVal) {
-        console.log(element);
         if (!newVal) {
           return;
         }
@@ -57,6 +53,15 @@ trackerApp.directive('lineCharts', function() {
                     .append("g")
                       .attr("transform",
                             "translate(" + margin.left + "," + margin.top + ")");
+
+          // set the ranges
+          var x = d3.scaleTime().range([0, width]);
+          var y = d3.scaleLinear().range([height, 0]);
+
+          // define the line creating function
+          var priceline = d3.line()
+              .x(function(d) { return x(d.time);  })
+              .y(function(d) { return y(d.close); })
 
           // Scale the range of the data
           x.domain(d3.extent(
@@ -79,26 +84,6 @@ trackerApp.directive('lineCharts', function() {
              .style("stroke", color(id))
              .attr("d", priceline(cryptoData.prices));
 
-         svg.selectAll("dot")
-            .data(cryptoData.prices)
-              .enter().append("circle")
-            .attr("r", 0.5)
-            .attr("cx", function(d) { return x(d.time); })
-            .attr("cy", function(d) { return y(d.close); })
-            .on("mouseover", function(d) {
-              div.transition()
-                .duration(200)
-                .style("opacity", .9);
-              div.html(formatTime(d.time) + "<br/>" + d.close)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
-              })
-            .on("mouseout", function(d) {
-              div.transition()
-                .duration(500)
-                .style("opacity", 0);
-              });
-
           svg.append("text")
              .attr("x", width/2)
              .attr("y", 0)
@@ -112,11 +97,48 @@ trackerApp.directive('lineCharts', function() {
              .attr("transform", "translate(0," + height + ")")
              .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %y")));
 
-          // Add the Y Axis
           svg.append("g")
-             .attr("class", "axis")
-             .call(d3.axisLeft(y));
-         })
+             .attr("class", "y axis")
+             .call(d3.axisLeft(y))
+             .append("text")
+             .attr("transform", "rotate(-90)")
+             .attr("y", 6)
+             .attr("dy", ".71em")
+             .style("fill", '#000')
+             .text("Price ($)");
+
+          var focus = svg.append("g")
+                      .attr("class", "focus")
+                      .style("display", "none");
+
+          focus.append("circle")
+                .attr("r", 4.5);
+
+          focus.append("text")
+                .attr("x", 9)
+                .attr("dy", ".35em");
+
+          svg.append("rect")
+             .attr("class", "overlay")
+             .attr("id", cryptoData.crypto)
+             .attr("width", width)
+             .attr("height", height)
+             .on("mouseover", function() { focus.style("display", null); })
+             .on("mouseout", function() { focus.style("display", "none"); })
+             .on("mousemove", mousemove);
+
+          function mousemove() {
+
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(cryptoData.prices, x0, 1),
+               d0 = cryptoData.prices[i - 1],
+               d1 = cryptoData.prices[i],
+                d = x0 - d0.time > d1.time - x0 ? d1 : d0;
+
+            focus.attr("transform", "translate(" + x(d.time) + "," + y(d.close) + ")");
+            focus.select("text").text(formatCurrency(d.close));
+          }
+        })
       })
     }
   }
